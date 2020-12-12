@@ -13,8 +13,15 @@ delay_dict = dict()
 delivery_ratio_dict = dict()
 drop_ratio_dict = dict()
 
-node_flow = ((20, 10), (40, 20), (60, 30), (80, 40), (100, 50))
+# node flow graph
 sizes = (250, 500, 750, 1000, 1250)
+
+# area flow graph
+nodes = (20, 40, 60, 80, 100)
+
+# area node graph
+flows = (10, 20, 30, 40, 50)
+
 throughput = 0
 delay = 0
 delivery_ratio = 0
@@ -25,8 +32,6 @@ y1 = []
 y2 = []
 y3 = []
 y4 = []
-x = list(sizes)
-xi = list(range(len(x)))
 
 
 def parsing():
@@ -42,9 +47,6 @@ def parsing():
 
     file_name = 'trace.tr'
     send_time_dict = dict()
-
-    def line_parse(line):
-        return line.split()
 
     with open(file_name) as fileobject:
         for line in fileobject:
@@ -87,62 +89,175 @@ def parsing():
     return (throughput, delay, delivery_ratio, drop_ratio)
 
 
-for item in node_flow:
-    y1.clear()
-    y2.clear()
-    y3.clear()
-    y4.clear()
-    nodes = item[0]
-    flow = item[1]
+# node_flow graph
+y1.clear()
+y2.clear()
+y3.clear()
+y4.clear()
+x = list(sizes)
+xi = list(range(len(x)))
 
-    for size in sizes:
-        command = 'ns offline.tcl ' + str(size) + ' ' + str(nodes) + ' ' + str(flow)
-        # print(command)
-        f.write(command + '\n')
-        os.system(command)
-        out = parsing()
-        throughput = out[0]
-        delay = out[1]
-        delivery_ratio = out[2]
-        drop_ratio = out[3]
-        y1.append(throughput)
-        y2.append(delay)
-        y3.append(delivery_ratio)
-        y4.append(drop_ratio)
-        f.write(str(throughput) + ' ' + str(delay) + ' ' + str(delivery_ratio) + ' ' + str(drop_ratio) + '\n')
-        # print (throughput, delay, delivery_ratio, drop_ratio)
+for size in sizes:
+    command = 'ns offline.tcl ' + str(size) + ' ' + str(40) + ' ' + str(20)
+    # print(command)
+    f.write(command + '\n')
+    os.system(command)
+    out = parsing()
+    throughput = out[0]
+    delay = out[1]
+    delivery_ratio = out[2]
+    drop_ratio = out[3]
+    y1.append(throughput)
+    y2.append(delay)
+    y3.append(delivery_ratio)
+    y4.append(drop_ratio)
+    f.write(str(throughput) + ' ' + str(delay) + ' ' + str(delivery_ratio) + ' ' + str(drop_ratio) + '\n')
+    # print (throughput, delay, delivery_ratio, drop_ratio)
 
-    # throughput
-    plt.plot(x, y1)
-    plt.xlabel('size(m)')
-    plt.ylabel('throughput(bits/sec)')
-    # plt.xticks(xi, x)
-    plt.title('Throughput graph for node = ' + str(nodes) + ' flow = ' + str(flow))
-    plt.show()
+# throughput
+plt.plot(x, y1, marker='o')
+plt.xlabel('size(m)')
+plt.ylabel('throughput(bits/sec)')
+plt.xticks(x)
+plt.title('Throughput vs area graph for node = ' + str(40) + ' flow = ' + str(20))
+plt.show()
 
-    # average delay
-    plt.plot(x, y2)
-    plt.xlabel('size(m)')
-    plt.ylabel('average delay(seconds)')
-    # plt.xticks(xi, x)
-    plt.title('Average delay graph for node = ' + str(nodes) + ' flow = ' + str(flow))
-    plt.show()
+# average delay
+plt.plot(x, y2, marker='o')
+plt.xlabel('size(m)')
+plt.ylabel('average delay(seconds)')
+plt.xticks(x)
+plt.title('Average delay vs area graph for node = ' + str(40) + ' flow = ' + str(20))
+plt.show()
 
-    # delivery ration
-    plt.plot(x, y3)
-    plt.xlabel('size(m)')
-    plt.ylabel('delivery ratio')
-    # plt.xticks(xi, x)
-    plt.title('Delivery ratio graph for node = ' + str(nodes) + ' flow = ' + str(flow))
-    plt.show()
+# delivery ration
+plt.plot(x, y3, marker='o')
+plt.xlabel('size(m)')
+plt.ylabel('delivery ratio')
+plt.xticks(x)
+plt.title('Delivery ratio vs area graph for node = ' + str(40) + ' flow = ' + str(20))
+plt.show()
 
-    # drop ratio
-    plt.plot(x, y4)
-    plt.xlabel('size(m)')
-    plt.ylabel('drop ratio')
-    # plt.xticks(xi, x)
-    plt.title('Drop ratio graph for node = ' + str(nodes) + ' flow = ' + str(flow))
-    plt.show()
+# drop ratio
+plt.plot(x, y4, marker='o')
+plt.xlabel('size(m)')
+plt.ylabel('drop ratio')
+plt.xticks(x)
+plt.title('Drop ratio vs area graph for node = ' + str(40) + ' flow = ' + str(20))
+plt.show()
+
+# area_flow graph
+y1.clear()
+y2.clear()
+y3.clear()
+y4.clear()
+x = list(nodes)
+xi = list(range(len(x)))
+
+for n_node in nodes:
+    command = 'ns offline.tcl ' + str(500) + ' ' + str(n_node) + ' ' + str(20)
+    # print(command)
+    f.write(command + '\n')
+    os.system(command)
+    out = parsing()
+    throughput = out[0]
+    delay = out[1]
+    delivery_ratio = out[2]
+    drop_ratio = out[3]
+    y1.append(throughput)
+    y2.append(delay)
+    y3.append(delivery_ratio)
+    y4.append(drop_ratio)
+    f.write(str(throughput) + ' ' + str(delay) + ' ' + str(delivery_ratio) + ' ' + str(drop_ratio) + '\n')
+    # print (throughput, delay, delivery_ratio, drop_ratio)
+
+# throughput
+plt.plot(x, y1, marker='o')
+plt.xlabel('no of nodes')
+plt.ylabel('throughput(bits/sec)')
+plt.xticks(x)
+plt.title('Throughput vs no of nodes graph for area = ' + str(500) + ' flow = ' + str(20))
+plt.show()
+
+# average delay
+plt.plot(x, y2, marker='o')
+plt.xlabel('no of nodes')
+plt.ylabel('average delay(seconds)')
+plt.xticks(x)
+plt.title('Average delay vs no of nodes graph for area = ' + str(500) + ' flow = ' + str(20))
+plt.show()
+
+# delivery ration
+plt.plot(x, y3, marker='o')
+plt.xlabel('no of nodes')
+plt.ylabel('delivery ratio')
+plt.xticks(x)
+plt.title('Delivery ratio vs no of nodes graph for area = ' + str(500) + ' flow = ' + str(20))
+plt.show()
+
+# drop ratio
+plt.plot(x, y4, marker='o')
+plt.xlabel('no of nodes')
+plt.ylabel('drop ratio')
+plt.xticks(x)
+plt.title('Drop ratio vs no of nodes graph for area = ' + str(500) + ' flow = ' + str(20))
+plt.show()
+
+# node_area graph
+y1.clear()
+y2.clear()
+y3.clear()
+y4.clear()
+x = list(flows)
+xi = list(range(len(x)))
+
+for flow in flows:
+    command = 'ns offline.tcl ' + str(500) + ' ' + str(40) + ' ' + str(flow)
+    # print(command)
+    f.write(command + '\n')
+    os.system(command)
+    out = parsing()
+    throughput = out[0]
+    delay = out[1]
+    delivery_ratio = out[2]
+    drop_ratio = out[3]
+    y1.append(throughput)
+    y2.append(delay)
+    y3.append(delivery_ratio)
+    y4.append(drop_ratio)
+    f.write(str(throughput) + ' ' + str(delay) + ' ' + str(delivery_ratio) + ' ' + str(drop_ratio) + '\n')
+    # print (throughput, delay, delivery_ratio, drop_ratio)
+
+# throughput
+plt.plot(x, y1, marker='o')
+plt.xlabel('flow')
+plt.ylabel('throughput(bits/sec)')
+plt.xticks(x)
+plt.title('Throughput graph vs flow for node = ' + str(40) + ' area = ' + str(500))
+plt.show()
+
+# average delay
+plt.plot(x, y2, marker='o')
+plt.xlabel('flow')
+plt.ylabel('average delay(seconds)')
+plt.xticks(x)
+plt.title('Average delay vs flow graph for node = ' + str(40) + ' area = ' + str(500))
+plt.show()
+
+# delivery ration
+plt.plot(x, y3, marker='o')
+plt.xlabel('flow')
+plt.ylabel('delivery ratio')
+plt.xticks(x)
+plt.title('Delivery ratio vs flow graph for node = ' + str(40) + ' area = ' + str(500))
+plt.show()
+
+# drop ratio
+plt.plot(x, y4, marker='o')
+plt.xlabel('flow')
+plt.ylabel('drop ratio')
+plt.xticks(x)
+plt.title('Drop ratio vs flow graph for node = ' + str(40) + ' area = ' + str(500))
+plt.show()
 
 f.close()
-
