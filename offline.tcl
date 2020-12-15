@@ -13,9 +13,9 @@ set val(ll)           LL                       ;# Link layer type
 set val(ifq)          Queue/DropTail/PriQueue  ;# Interface queue type
 set val(ifqlen)       50                       ;# max packet in ifq
 set val(netif)        Phy/WirelessPhy          ;# network interface type
-set val(mac)          Mac/802_11            ;# MAC type
-set val(rp)           DSDV                     ;# ad-hoc routing protocol 
-set val(nn)           [lindex $argv 1]                       ;# number of mobilenodes
+set val(mac)          Mac/802_11               ;# MAC type
+set val(rp)           DSDV                     ;# ad-hoc routing protocol
+set val(nn)           [lindex $argv 1]         ;# number of mobilenodes
 # =======================================================================
 
 # trace file
@@ -76,16 +76,16 @@ $ns node-config -adhocRouting $val(rp) \
                 -movementTrace OFF
 
 # create nodes
-for {set i 0} {$i < $val(nn) } {incr i} {
+ for {set i 0} { $i < $val(nn) } { incr i } {
     set node($i) [$ns node]
-    $node($i) random-motion 0       ;# disable random motion
+    $node($i) random-motion [expr {1+int(rand()*4)}]       ;
 
-    $node($i) set X_ [expr ($size / 10) * ($i % 10)]
-    $node($i) set Y_ [expr (($size * 10) / $val(nn)) * ($i / 10)]
+    $node($i) set X_ [expr {int(rand()*$size)}]
+    $node($i) set Y_ [expr {int(rand()*$size)}]
     $node($i) set Z_ 0
 
     $ns initial_node_pos $node($i) 20
-} 
+}
 
 
 
@@ -120,12 +120,12 @@ for {set i 0} {$i < $val(nf)} {incr i} {
     $tcp set fid_ $i
 
     # Traffic generator
-    set ftp [new Application/FTP]
+    set telnet [new Application/Telnet]
     # attach to agent
-    $ftp attach-agent $tcp
+    $telnet attach-agent $tcp
     
     # start traffic generation
-    $ns at 1.0 "$ftp start"
+    $ns at 1.0 "$telnet start"
 }
 
 

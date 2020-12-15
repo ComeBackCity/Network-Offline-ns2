@@ -3,10 +3,6 @@ import os
 import matplotlib.pyplot as plt
 
 file = 'out.txt'
-# file1 = "throughput.txt"
-# file2 = "delay.txt"
-# file3 = "delivery_ratio.txt"
-# file4 = "drop_ratio.txt"
 
 throughput_dict = dict()
 delay_dict = dict()
@@ -83,9 +79,9 @@ def parsing():
 
     simulation_time = end_time - start_time
     throughput = (received_bytes * 8) / simulation_time
-    delay = (total_delay / received)
-    delivery_ratio = received / sent
-    drop_ratio = dropped / sent
+    delay = float('inf') if received == 0 else (total_delay / received)
+    delivery_ratio = float ('inf') if sent == 0 else received / sent
+    drop_ratio = float('inf') if sent == 0 else dropped / sent
     return (throughput, delay, delivery_ratio, drop_ratio)
 
 
