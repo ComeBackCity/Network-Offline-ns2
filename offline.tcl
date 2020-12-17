@@ -78,13 +78,19 @@ $ns node-config -adhocRouting $val(rp) \
 # create nodes
  for {set i 0} { $i < $val(nn) } { incr i } {
     set node($i) [$ns node]
-    $node($i) random-motion [expr {1+int(rand()*4)}]       ;
+    $node($i) random-motion 0       ;
 
     $node($i) set X_ [expr {int(rand()*$size)}]
     $node($i) set Y_ [expr {int(rand()*$size)}]
     $node($i) set Z_ 0
 
     $ns initial_node_pos $node($i) 20
+
+    set x2 [expr {int(rand()*($size-1))+1}]
+    set y2 [expr {int(rand()*($size-1))+1}]
+    set speed [expr {int(rand()*4)+1}]
+
+    $ns at 0.0 "$node($i) setdest $x2 $y2 $speed"
 }
 
 
